@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stopwatch App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    #display {
+      font-size: 3rem;
+      margin: 20px 0;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px 30px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 5px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #ddd;
+    }
+
+    #laps {
+      margin-top: 30px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .lap {
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-left: 4px solid #fff;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .lap span {
+      flex-grow: 1;
+    }
+
+    .lap input {
+      font-size: 1rem;
+      padding: 4px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .edit-btn {
+      background-color: #ffeb3b;
+      color: #000;
+      margin-left: 10px;
+    }
+
+    .save-btn {
+      background-color: #4caf50;
+      color: #fff;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>⏱️ Stopwatch</h1>
+  <div id="display">00:00:00.00</div>
+  <div>
+    <button onclick="start()">Start</button>
+    <button onclick="pause()">Pause</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="lap()">Lap</button>
+  </div>
+
+  <div id="laps"></div>
+
+  <script>
+    let [hours, minutes, seconds, milliseconds] = [0, 0, 0, 0];
+    let timer = null;
+    let lapCounter = 1;
+
+    function format(n, digits = 2) {
+      return n.toString().padStart(digits, '0');
+    }
+
+    function getCurrentTime() {
+      return `${format(hours)}:${format(minutes)}:${format(seconds)}.${format(milliseconds, 2)}`;
+    }
+
+    function updateDisplay() {
+      document.getElementById("display").innerText = getCurrentTime();
+    }
+
+    function start() {
+      if (timer !== null) return;
+      timer = setInterval(() => {
+        milliseconds += 1;
+        if (milliseconds === 100) {
+          milliseconds = 0;
+          seconds++;
+        }
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+        }
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+        updateDisplay();
+      }, 10); // 10ms interval
+    }
+
+    function pause() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function reset() {
+      pause();
+      [hours, minutes, seconds, milliseconds] = [0, 0, 0, 0];
+      updateDisplay();
+      document.getElementById("laps").innerHTML = "";
+      lapCounter = 1;
+    }
+
+    function lap() {
+      const laps = document.getElementById("laps");
+      const lapDiv = document.createElement("div");
+      lapDiv.className = "lap";
+      lapDiv.innerHTML = `
+        <span id="lapText${lapCounter}"><strong>Lap ${lapCounter}</strong>: ${getCurrentTime()}</span>
+        <button class="edit-btn" onclick="editLap(${lapCounter})">Edit</button>
+      `;
+      laps.appendChild(lapDiv);
+      lapCounter++;
+    }
+
+    function editLap(id) {
+      const span = document.getElementById(`lapText${id}`);
+      const text = span.textContent;
+      const parts = text.split(':');
+      const label = parts[0].replace("Lap ", "").trim();
+      const time = parts.slice(1).join(':').trim();
+
+      span.innerHTML = `
+        <input type="text" id="lapLabel${id}" value="${label}" placeholder="Lap Name" style="width:80px;">
+        <input type="text" id="lapTime${id}" value="${time}" placeholder="00:00:00.00" style="width:100px;">
+        <button class="save-btn" onclick="saveLap(${id})">Save</button>
+      `;
+    }
+
+    function saveLap(id) {
+      const newLabel = document.getElementById(`lapLabel${id}`).value;
+      const newTime = document.getElementById(`lapTime${id}`).value;
+      document.getElementById(`lapText${id}`).innerHTML = `<strong>${newLabel}</strong>: ${newTime}`;
+    }
+  </script>
+</body>
+</html>
