@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    header h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      color: #00fff0;
+    }
+
+    header p {
+      font-size: 1.2em;
+      color: #ccc;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #00fff0;
+      object-fit: cover;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .section {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section h2 {
+      color: #00fff0;
+      font-size: 2em;
+      margin-bottom: 15px;
+    }
+
+    .skills, .about {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .skills ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .skills li {
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2em;
+      }
+
+      .section h2 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="./profile.jpeg" alt="Profile Photo" class="profile-pic">
+    <h1>Hello, I'm Karan Ghadge</h1>
+    <p>Web Developer • UI/UX Designer • Tech Enthusiast</p>
+  </header>
+
+  <section class="section skills">
+    <h2>Skills & Technologies</h2>
+    <ul>
+      <li>HTML5, CSS3, JavaScript</li>
+      <li>Python, JSP, R-Programming</li>
+      <li>React, Node.js, Express</li>
+      <li>Responsive Design & UI/UX Principles</li>
+      <li>Git & GitHub, REST APIs</li>
+    </ul>
+  </section>
+
+  <section class="section about">
+    <h2>About Me</h2>
+    <p>
+      I'm a passionate web developer with a background in computer applications. I specialize in creating dynamic, user-friendly websites and applications.
+    </p>
+    <p>
+      <strong>Education:</strong><br>
+      BCA in Modern college, Pune
+    </p>
+    <p>
+      <strong>Experience:</strong><br>
+      - Frontend Developer Intern at skill-craft<br>
+      - Frontend Developer Intern at Tech_Grow
+    </p>
+  </section>
+
+  <footer>
+    © 2025 Karan Ghadge. All rights reserved.
+  </footer>
+
+</body>
+</html>
