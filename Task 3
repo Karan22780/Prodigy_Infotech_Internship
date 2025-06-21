@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> Tic-Tac-Toe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #00fff0;
+    }
+
+    .scoreboard {
+      margin-bottom: 20px;
+      font-size: 1.3em;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 10px;
+    }
+
+    .cell {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid #00fff0;
+      color: #00fff0;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+
+    .cell:hover {
+      background-color: rgba(0, 255, 240, 0.2);
+      transform: scale(1.05);
+    }
+
+    .cell.taken {
+      pointer-events: none;
+    }
+
+    .status {
+      margin-top: 20px;
+      font-size: 1.3em;
+      color: #fff;
+      text-shadow: 0 0 5px #00fff0;
+    }
+
+    .status.win {
+      font-size: 1.5em;
+      color: #0f0;
+      text-shadow: 0 0 10px #0f0;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 1em;
+      font-family: 'Orbitron', sans-serif;
+      border: none;
+      background: #00fff0;
+      color: #111;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    button:hover {
+      background: #00d9c0;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 400px) {
+      .board {
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+      }
+      .cell {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🔥 Tic-Tac-Toe</h1>
+  <div class="scoreboard" id="scoreboard">Player X: 0 | Player O: 0</div>
+  <div class="board" id="board"></div>
+  <div class="status" id="status">Player X's turn</div>
+  <div class="buttons">
+    <button onclick="resetGame()">Restart Game</button>
+    <button onclick="resetScores()">Reset Scores</button>
+  </div>
+
+  <script>
+    const board = document.getElementById('board');
+    const statusText = document.getElementById('status');
+    const scoreboard = document.getElementById('scoreboard');
+
+    let currentPlayer = 'X';
+    let gameActive = true;
+    let cells = [];
+    let scores = { X: 0, O: 0 };
+
+    const winningCombos = [
+      [0,1,2], [3,4,5], [6,7,8],
+      [0,3,6], [1,4,7], [2,5,8],
+      [0,4,8], [2,4,6]
+    ];
+
+    function updateScoreboard() {
+      scoreboard.textContent = `Player X: ${scores.X} | Player O: ${scores.O}`;
+    }
+
+    function createBoard() {
+      board.innerHTML = '';
+      cells = [];
+
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleCellClick);
+        board.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function handleCellClick(e) {
+      const cell = e.target;
+      if (cell.textContent || !gameActive) return;
+
+      cell.textContent = currentPlayer;
+      cell.classList.add('taken');
+
+      if (checkWin()) {
+        statusText.textContent = `🎉 Player ${currentPlayer} wins!`;
+        statusText.classList.add('win');
+        scores[currentPlayer]++;
+        updateScoreboard();
+        gameActive = false;
+        return;
+      }
+
+      if (cells.every(cell => cell.textContent)) {
+        statusText.textContent = "😮 It's a draw!";
+        statusText.classList.remove('win');
+        gameActive = false;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      statusText.textContent = `Player ${currentPlayer}'s turn`;
+      statusText.classList.remove('win');
+    }
+
+    function checkWin() {
+      return winningCombos.some(combo => {
+        const [a, b, c] = combo;
+        return (
+          cells[a].textContent &&
+          cells[a].textContent === cells[b].textContent &&
+          cells[a].textContent === cells[c].textContent
+        );
+      });
+    }
+
+    function resetGame() {
+      currentPlayer = 'X';
+      gameActive = true;
+      statusText.textContent = `Player ${currentPlayer}'s turn`;
+      statusText.classList.remove('win');
+      createBoard();
+    }
+
+    function resetScores() {
+      scores.X = 0;
+      scores.O = 0;
+      updateScoreboard();
+      resetGame();
+    }
+
+    createBoard();
+    updateScoreboard();
+  </script>
+</body>
+</html>
